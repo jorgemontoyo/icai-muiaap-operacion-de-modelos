@@ -1,0 +1,25 @@
+[project]
+name = "semana2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Jorge", email = "jms148@gcloud.ua.es" }
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+semana2 = "semana2:main"
+
+[build-system]
+requires = ["uv_build>=0.12.16,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.workspace]
+members = [
+    "semana2/wine-quality-project",
+    "wine-quality-project",
+]
+
+exclude= ["wine-quality-project"]
