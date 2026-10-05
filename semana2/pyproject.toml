@@ -18,8 +18,5 @@ build-backend = "uv_build"
 
 [tool.uv.workspace]
 members = [
-    "semana2/wine-quality-project",
-    "wine-quality-project",
+    "env-demo",
 ]
-
-exclude= ["wine-quality-project"]
