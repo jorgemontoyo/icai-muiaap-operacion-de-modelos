@@ -1,0 +1,25 @@
+{
+  "artifact": "wine_quality_classifier.joblib",
+  "model_version": "wine-quality-rf-v1",
+  "feature_names": [
+    "fixed_acidity",
+    "volatile_acidity",
+    "citric_acid",
+    "residual_sugar",
+    "chlorides",
+    "free_sulfur_dioxide",
+    "total_sulfur_dioxide",
+    "density",
+    "ph",
+    "sulphates",
+    "alcohol"
+  ],
+  "allowed_labels": [
+    "acceptable",
+    "excellent",
+    "needs_review"
+  ],
+  "estimator_type": "sklearn.ensemble._forest.RandomForestClassifier",
+  "$schema_version": "https://json-schema.org/draft/2020-12/schema",
+  "preprocreassing_version": "1.0.0"
+}
