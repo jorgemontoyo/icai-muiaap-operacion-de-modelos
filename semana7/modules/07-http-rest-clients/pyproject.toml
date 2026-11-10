@@ -22,3 +22,8 @@ line-length = 88
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.uv.workspace]
+members = [
+    "07-Request-AEMET",
+]
