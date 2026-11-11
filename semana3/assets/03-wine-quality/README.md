@@ -13,3 +13,10 @@ las columnas a `snake_case`; se ha eliminado la columna objetivo `quality`.
 El archivo completo se usa únicamente para que el profesorado genere el
 artefacto local `models/wine_quality_classifier.joblib`. Ese artefacto y los
 datos de entrenamiento no se versionan en Git.
+
+
+Respuesta de preguntas: 
+1) el campo sample_id
+2) fixed_acidity,volatile_acidity,citric_acid,residual_sugar,chlorides,free_sulfur_dioxide,total_sulfur_dioxide,density,ph,sulphates,alcohol
+3) Un campo que no acepte el contrato 
+4) 
