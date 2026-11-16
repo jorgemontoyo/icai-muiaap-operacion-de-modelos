@@ -2,6 +2,23 @@ version = 1
 revision = 3
 requires-python = ">=3.12"
 
+[manifest]
+members = [
+    "07-request-aemet",
+    "s7-http-rest-clients",
+]
+
+[[package]]
+name = "07-request-aemet"
+version = "0.1.0"
+source = { editable = "07-Request-AEMET" }
+dependencies = [
+    { name = "requests" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "requests", specifier = ">=2.34.2" }]
+
 [[package]]
 name = "certifi"
 version = "2026.7.22"

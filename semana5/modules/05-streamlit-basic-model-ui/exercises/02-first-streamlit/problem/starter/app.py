@@ -10,6 +10,7 @@ from typing import Any
 from model_ui.contracts import PredictionPayload
 from model_ui.errors import ArtifactUnavailableError, InputContractError
 from model_ui.gateway import InferenceGateway, PackagedBundleGateway
+from model_ui.presentation import confidence_caption, quality_label
 from model_ui.ui_schema import FIELD_SPECS
 
 
@@ -40,23 +41,34 @@ def render_inference_error(st: Any) -> None:
 
 
 def collect_values(st: Any) -> tuple[bool, dict[str, float]]:
-    """TODO: renderiza ``FIELD_SPECS`` dentro de un único ``st.form``.
+    """Recoge los once valores Wine en un único formulario."""
 
-    Cada ``number_input`` debe recibir label, rango, default, step y una key
-    estable. Devuelve ``(submitted, values)`` sin llamar al gateway.
-    """
+    values: dict[str, float] = {}
+    with st.form("wine_quality_form"):
+        for field in FIELD_SPECS:
+            values[field.name] = st.number_input(
+                field.label,
+                min_value=field.min_value,
+                max_value=field.max_value,
+                value=field.default,
+                step=field.step,
+                key=f"input_{field.name}",
+            )
+        submitted = st.form_submit_button("Ejecutar inferencia")
 
-    raise NotImplementedError(
-        f"TODO: renderiza los {len(FIELD_SPECS)} campos de FIELD_SPECS"
-    )
+    return submitted, values
 
 
 def render_prediction(st: Any, prediction: PredictionPayload) -> None:
-    """TODO: presenta los cuatro campos de ``PredictionPayload``."""
+    """Muestra la predicción y la trazabilidad del artefacto usado."""
 
-    raise NotImplementedError(
-        "TODO: presenta quality_band, confidence y las dos versiones"
+    st.success("Inferencia completada.")
+    st.write(f"quality_band: {quality_label(prediction)} ({prediction.quality_band})")
+    st.write(
+        f"confidence: {prediction.confidence:.2f}. {confidence_caption(prediction)}"
     )
+    st.write(f"model_version: {prediction.model_version}")
+    st.write(f"preprocessing_version: {prediction.preprocessing_version}")
 
 
 def run_app(st: Any, gateway: InferenceGateway) -> None:
