@@ -1,0 +1,280 @@
+{
+  "M1": {
+    "leaky": {
+      "band": "acceptable",
+      "confidence": 0.8312377,
+      "raw_score": 6.137,
+      "threshold_config": "/srv/models/thresholds.yaml"
+    },
+    "public": {
+      "band": "acceptable",
+      "confidence": 0.83,
+      "served_at": "2026-11-20T19:02:23.377271Z",
+      "note": null,
+      "is_reliable": true
+    },
+    "filtered": {
+      "band": "acceptable",
+      "confidence": 0.83,
+      "served_at": "2026-11-20T19:02:23.380359Z",
+      "note": null,
+      "is_reliable": true
+    },
+    "compact": {
+      "band": "acceptable",
+      "confidence": 0.83,
+      "served_at": "2026-11-20T19:02:23.381568Z",
+      "is_reliable": true
+    },
+    "PublicScore_schema": {
+      "properties": {
+        "band": {
+          "$ref": "#/components/schemas/Band"
+        },
+        "confidence": {
+          "type": "number",
+          "title": "Confidence"
+        },
+        "served_at": {
+          "type": "string",
+          "title": "Served At"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Note"
+        },
+        "is_reliable": {
+          "type": "boolean",
+          "title": "Is Reliable",
+          "readOnly": true
+        }
+      },
+      "type": "object",
+      "required": [
+        "band",
+        "confidence",
+        "served_at",
+        "is_reliable"
+      ],
+      "title": "PublicScore",
+      "description": "Lo que promete la API."
+    }
+  },
+  "M2": [
+    {
+      "case": "POST valido",
+      "status": 200,
+      "body": {
+        "score": 0.01
+      }
+    },
+    {
+      "case": "POST age texto",
+      "status": 422,
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Invalid input",
+          "fields": [
+            {
+              "field": "age",
+              "message": "Input should be a valid integer, unable to parse string as an integer"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "POST falta income",
+      "status": 422,
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Invalid input",
+          "fields": [
+            {
+              "field": "income",
+              "message": "Field required"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "GET /v1/nada",
+      "status": 404,
+      "body": {
+        "error": {
+          "code": "not_found",
+          "message": "HTTP error"
+        }
+      }
+    },
+    {
+      "case": "GET /v1/boom",
+      "status": 500,
+      "body": {
+        "error": {
+          "code": "internal_error",
+          "message": "Unexpected error"
+        }
+      }
+    },
+    {
+      "case": "POST modelo no disponible (adicional)",
+      "status": 503,
+      "body": {
+        "error": {
+          "code": "model_unavailable",
+          "message": "Model not ready"
+        }
+      }
+    }
+  ],
+  "M2_without_handler": {
+    "status": 422,
+    "body": {
+      "detail": [
+        {
+          "type": "int_parsing",
+          "loc": [
+            "body",
+            "age"
+          ],
+          "msg": "Input should be a valid integer, unable to parse string as an integer",
+          "input": "treinta"
+        }
+      ]
+    }
+  },
+  "M3": {
+    "operation": {
+      "tags": [
+        "scoring"
+      ],
+      "summary": "Calcular el score de riesgo",
+      "description": "Calcula la probabilidad de impago de un cliente.\n\n- `age` entre 18 y 100, `income` mayor que 0.\n- El score es docente: **no** es una decisión de crédito.",
+      "operationId": "create_score_v1_scores_post",
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ScoringRequest"
+            },
+            "examples": {
+              "valid": {
+                "summary": "Cliente válido",
+                "value": {
+                  "age": 42,
+                  "income": 38000
+                }
+              },
+              "minor": {
+                "summary": "Menor de edad: 422",
+                "value": {
+                  "age": 16,
+                  "income": 1
+                }
+              },
+              "no_income": {
+                "summary": "Falta income: 422",
+                "value": {
+                  "age": 30
+                }
+              }
+            }
+          }
+        },
+        "required": true
+      },
+      "responses": {
+        "200": {
+          "description": "Score y versión del modelo.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoringResponse"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Entrada fuera de contrato.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              }
+            }
+          }
+        },
+        "503": {
+          "description": "Modelo no disponible.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "example_responses": {
+      "valid": {
+        "status": 200,
+        "body": {
+          "score": 0.26,
+          "model_version": "1.4.2"
+        }
+      },
+      "minor": {
+        "status": 422,
+        "body": {
+          "detail": [
+            {
+              "type": "greater_than_equal",
+              "loc": [
+                "body",
+                "age"
+              ],
+              "msg": "Input should be greater than or equal to 18",
+              "input": 16,
+              "ctx": {
+                "ge": 18
+              }
+            }
+          ]
+        }
+      },
+      "no_income": {
+        "status": 422,
+        "body": {
+          "detail": [
+            {
+              "type": "missing",
+              "loc": [
+                "body",
+                "income"
+              ],
+              "msg": "Field required",
+              "input": {
+                "age": 30
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "M4_default_client": {
+    "raised": "RuntimeError"
+  }
+}
