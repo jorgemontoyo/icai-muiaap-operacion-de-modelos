@@ -1,0 +1,7 @@
+.......................FFFF                                              [100%]
+=========================== short test summary info ===========================
+FAILED tests/test_s9_4_student.py::test_prediction_returns_503_when_model_is_unavailable
+FAILED tests/test_s9_4_student.py::test_out_of_contract_values_are_rejected
+FAILED tests/test_s9_4_student.py::test_range_limits_are_inclusive - Failed: ...
+FAILED tests/test_s9_4_student.py::test_openapi_matches_versioned_contract - ...
+4 failed, 23 passed in 0.40s

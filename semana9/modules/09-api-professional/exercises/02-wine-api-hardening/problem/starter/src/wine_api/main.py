@@ -11,11 +11,7 @@ from wine_api.predictor import Predictor, build_predictor
 from wine_api.request_id import request_id_middleware
 from wine_api.routers import health, predictions
 
-# TODO S9.3g: completa los metadatos que lee el consumidor en /docs:
-# `version` (¿mayor, menor o parche tras S9.1c?), `summary`, una `description`
-# en Markdown que explique `request_id` y el sobre de error, y `openapi_tags`
-# con una descripción por tag. Comprobación: tests/test_s9_3_openapi.py
-API_VERSION = "1.0.0"
+API_VERSION = "1.1.0"
 
 
 def create_app(predictor: Predictor | None = None) -> FastAPI:
@@ -28,7 +24,33 @@ def create_app(predictor: Predictor | None = None) -> FastAPI:
         )
         yield
 
-    app = FastAPI(title="Wine Quality API", version=API_VERSION, lifespan=lifespan)
+    app = FastAPI(
+        title="Wine Quality API",
+        version=API_VERSION,
+        summary="Predicción de calidad de vino tinto con un contrato verificable.",
+        description=(
+            "Envía once variables fisicoquímicas a `POST /v1/predictions`. "
+            "El predictor es una demo determinista para uso docente.\n\n"
+            "Cada respuesta incluye `request_id`, también en la cabecera "
+            "`X-Request-Id`, para relacionar peticiones, respuestas y logs. "
+            "`served_at` indica cuándo se atendió la predicción, en UTC.\n\n"
+            "Los errores usan `ErrorResponse`: `error.code` es estable, "
+            "`error.message` explica el fallo y `error.fields` identifica los "
+            "campos inválidos cuando procede; `request_id` está en la raíz. "
+            "El cuerpo no devuelve entradas ni detalles internos del servidor."
+        ),
+        openapi_tags=[
+            {
+                "name": "health",
+                "description": "Disponibilidad del servicio y del modelo.",
+            },
+            {
+                "name": "predictions",
+                "description": "Inferencia de calidad de vino tinto.",
+            },
+        ],
+        lifespan=lifespan,
+    )
     app.middleware("http")(request_id_middleware)
     install_error_handlers(app)
     app.include_router(health.router)

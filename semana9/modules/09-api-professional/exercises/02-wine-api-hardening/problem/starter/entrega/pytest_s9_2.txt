@@ -1,0 +1,14 @@
+................FFFFFFFFFFF                                              [100%]
+=========================== short test summary info ===========================
+FAILED tests/test_s9_3_openapi.py::test_info_describes_the_service - Assertio...
+FAILED tests/test_s9_3_openapi.py::test_tags_are_declared_with_descriptions
+FAILED tests/test_s9_3_openapi.py::test_every_operation_has_summary_docstring_and_tag
+FAILED tests/test_s9_3_openapi.py::test_prediction_errors_reference_the_error_envelope
+FAILED tests/test_s9_3_openapi.py::test_health_documents_503 - KeyError: '503'
+FAILED tests/test_s9_3_openapi.py::test_request_body_offers_valid_and_invalid_examples
+FAILED tests/test_s9_3_openapi.py::test_feature_fields_are_described - Assert...
+FAILED tests/test_s9_4_student.py::test_prediction_returns_503_when_model_is_unavailable
+FAILED tests/test_s9_4_student.py::test_out_of_contract_values_are_rejected
+FAILED tests/test_s9_4_student.py::test_range_limits_are_inclusive - Failed: ...
+FAILED tests/test_s9_4_student.py::test_openapi_matches_versioned_contract - ...
+11 failed, 16 passed in 0.47s
